@@ -1,8 +1,6 @@
 # Define variables
 $switchName = "ExternalSwitch"
 
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All
-
 # Get the network adapter for the external connection
 $networkAdapter = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' -and $_.PhysicalMediaType -eq '802.3' } | Select-Object -First 1
 $adapterName = $networkAdapter.Name
