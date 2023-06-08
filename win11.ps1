@@ -1,15 +1,21 @@
 #run powershell script
-$PSScriptRoot/"ExternalSwitch.ps1"
+#. "$PSScriptRoot/ExternalSwitch.ps1"
 
 # Define variables
-$vmName = "Windows 11"
-$vmMemory = 4096
+$vmName = "Windows11"
+$vmMemory = 4096MB
 $vmProcessorCount = 2
-$vmDiskPath = "C:\VMs\Windows 11\Virtual Hard Disks\Windows 11.vhdx"
-$isoPath = "C:\ISOs\Windows 11.iso"
+$vmDiskPath = "C:\VMs\Windows11\VHD\Windows11.vhdx"
+$isoPath = "C:\ISOs\Windows11.iso"
+$switchName = "ExternalSwitch"
+$vhdPath = "C:\VMs\Windows11\VHD\Windows11.vhdx"
+$vhdSize = 50GB
+
+# Create an empty VHDX file
+New-VHD -Path $vhdPath -SizeBytes $vhdSize -Dynamic
 
 # Create a new virtual machine
-New-VM -Name $vmName -MemoryStartupBytes $vmMemory -SwitchName "Default" -Path "C:\VMs"
+New-VM -Name $vmName -MemoryStartupBytes $vmMemory -SwitchName $switchName -Path "C:\VMs"
 
 # Set the number of virtual processors
 Set-VMProcessor -VMName $vmName -Count $vmProcessorCount
