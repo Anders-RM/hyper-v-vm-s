@@ -1,3 +1,6 @@
+#run powershell script
+$PSScriptRoot/"ExternalSwitch.ps1"
+
 # Define variables
 $vmName = "Windows 11"
 $vmMemory = 4096
