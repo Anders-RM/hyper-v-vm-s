@@ -1,3 +1,7 @@
+# Import necessary assemblies
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName Microsoft.VisualBasic
+
 # Run ExternalSwitch.ps1 script to configure the network switch
 if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
     # Create external switch
@@ -6,31 +10,18 @@ if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
 
 $hperVDefaultPath = (Get-VMHost).VirtualMachinePath
 
-# Prompt the user for the vmName using the Windows UI
-$vmName = [System.Windows.Forms.InputBox]::Show("Enter the virtual machine name:", "Virtual Machine Name", "")
-
-# Prompt the user for the location using the Windows UI
-$folderBrowserDialog = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-$folderBrowserDialog.Description = "Select the location to create the virtual machine"
-$folderBrowserDialog.RootFolder = "Desktop"
-
-$vmPath = if ($folderBrowserDialog.ShowDialog() -eq 'OK') {
-    $folderBrowserDialog.SelectedPath
-} else {
-    Write-Error "No location selected."
-    return
-}
+# Prompt the user for the vmName using the InputBox
+$vmName = [Microsoft.VisualBasic.Interaction]::InputBox("Enter the virtual machine name:", "Virtual Machine Name", "")
 
 # Define other variables for the virtual machine
 $vmMemory = 4096MB
 $vmProcessorCount = 2
 $switchName = "ExternalSwitch"
 $vhdSize = 127GB
-
-$vmDiskPath = Join-Path -Path $vmPath -ChildPath "$vmName.vhdx"
+$vmDiskPath = "$hperVDefaultPath\$vmName\VHD\$vmName.vhdx"
 
 # Prompt the user for the ISO file location using the Windows UI
-$openFileDialog = [System.Windows.Forms.OpenFileDialog]::new()
+$openFileDialog = New-Object -TypeName System.Windows.Forms.OpenFileDialog
 $openFileDialog.Title = "Select ISO File"
 $openFileDialog.Filter = "ISO Files (*.iso)|*.iso"
 
@@ -45,7 +36,7 @@ $isoPath = if ($openFileDialog.ShowDialog() -eq 'OK') {
 New-VHD -Path $vmDiskPath -SizeBytes $vhdSize -Dynamic
 
 # Create a new virtual machine with the specified settings
-New-VM -Name $vmName -Generation 2 -MemoryStartupBytes $vmMemory -SwitchName $switchName -Path $vmPath
+New-VM -Name $vmName -Generation 2 -MemoryStartupBytes $vmMemory -SwitchName $switchName -Path $hperVDefaultPath
 
 # Set the number of virtual processors for the virtual machine
 Set-VMProcessor -VMName $vmName -Count $vmProcessorCount

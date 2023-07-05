@@ -1,4 +1,6 @@
+# Import necessary assemblies
 Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName Microsoft.VisualBasic
 
 # Run ExternalSwitch.ps1 script to configure the network switch
 if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
@@ -8,8 +10,9 @@ if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
 
 $hperVDefaultPath = (Get-VMHost).VirtualMachinePath
 
+$vmName = [Microsoft.VisualBasic.Interaction]::InputBox("Enter the virtual machine name:", "Virtual Machine Name", "")
+
 # Define variables for the virtual machine
-$vmName = "Windows 10"
 $vmMemory = 4096MB
 $vmProcessorCount = 2
 $vmDiskPath = "$hperVDefaultPath\$vmName\VHD\"
@@ -34,7 +37,7 @@ if ($dialogResult -eq [System.Windows.Forms.DialogResult]::OK) {
     Copy-Item -Path $vmDisk -Destination $vmDiskDestination
 
     # Create a new virtual machine with the specified settings
-    New-VM -Name $vmName -Generation 2 -MemoryStartupBytes $vmMemory -SwitchName $switchName -Path "C:\VMs"
+    New-VM -Name $vmName -Generation 2 -MemoryStartupBytes $vmMemory -SwitchName $switchName -Path $hperVDefaultPath
 
     # Set the number of virtual processors for the virtual machine
     Set-VMProcessor -VMName $vmName -Count $vmProcessorCount
