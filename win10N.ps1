@@ -3,12 +3,12 @@ if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
     # Create external switch
     & "$PSScriptRoot/ExternalSwitch.ps1"
 }
-
+$hperVDefaultPath  = (Get-VMHost).VirtualMachinePath
 # Define variables for the virtual machine
 $vmName = "Windows 10"
 $vmMemory = 4096MB
 $vmProcessorCount = 2
-$vmDiskPath = "C:\VMs\Windows10\VHD\Windows10.vhdx"
+$vmDiskPath = "$hperVDefaultPath\$vmName\VHD\Windows10.vhdx"
 $isoPath = "C:\ISOs\Win10_Media_Creation_Tool.iso"
 $switchName = "ExternalSwitch"
 $vhdSize = 127GB
@@ -17,7 +17,7 @@ $vhdSize = 127GB
 New-VHD -Path $vmDiskPath -SizeBytes $vhdSize -Dynamic
 
 # Create a new virtual machine with the specified settings
-New-VM -Name $vmName -Generation 1 -MemoryStartupBytes $vmMemory -SwitchName $switchName -Path "C:\VMs"
+New-VM -Name $vmName -Generation 2 -MemoryStartupBytes $vmMemory -SwitchName $switchName -Path "C:\VMs"
 
 # Set the number of virtual processors for the virtual machine
 Set-VMProcessor -VMName $vmName -Count $vmProcessorCount

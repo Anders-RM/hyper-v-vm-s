@@ -3,12 +3,12 @@ if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
     # Create external switch
     & "$PSScriptRoot/ExternalSwitch.ps1"
 }
-
+$hperVDefaultPath  = (Get-VMHost).VirtualMachinePath
 # Define variables for the virtual machine
 $vmName = "Windows10"
 $vmMemory = 4096MB
 $vmProcessorCount = 2
-$vmDiskPath = "C:\VMs\Windows11\VHD\Windows10.vhdx"
+$vmDiskPath = "$hperVDefaultPath\$vmName\VHD\Windows10.vhdx"
 $switchName = "ExternalSwitch"
 
 Copy-Item .\Windows11.vhdx $vmDiskPath
