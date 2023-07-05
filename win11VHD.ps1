@@ -5,11 +5,16 @@ if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
 }
 $hperVDefaultPath  = (Get-VMHost).VirtualMachinePath
 # Define variables for the virtual machine
-$vmName = "Windows11"
+$vmName = "Windows 11"
 $vmMemory = 4096MB
 $vmProcessorCount = 2
-$vmDiskPath = "$hperVDefaultPath\$vmName\VHD\Windows11.vhdx"
+$vmDiskPath = "$hperVDefaultPath\$vmName\VHD\"
+$vmDisk = "$vmDiskPath\Windows11.vhdx"
 $switchName = "ExternalSwitch"
+
+if(-not(Test-Path $vmDiskPath)){
+    new-item $vmDiskPath -ItemType Directory -Force
+}
 
 Copy-Item .\Windows11.vhdx $vmDiskPath
 
@@ -20,7 +25,7 @@ New-VM -Name $vmName -Generation 2 -MemoryStartupBytes $vmMemory -SwitchName $sw
 Set-VMProcessor -VMName $vmName -Count $vmProcessorCount
 
 # Add a virtual hard disk to the virtual machine
-Add-VMHardDiskDrive -VMName $vmName -Path $vmDiskPath
+Add-VMHardDiskDrive -VMName $vmName -Path $vmDisk
 
 # Set a new local key protector for the virtual machine
 Set-VMKeyProtector -VMName $VMName -NewLocalKeyProtector
