@@ -5,7 +5,7 @@ if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
 }
 
 # Define variables for the virtual machine
-$vmName = "Windows11"
+$vmName = "Windows 11"
 $vmMemory = 4096MB
 $vmProcessorCount = 2
 $vmDiskPath = "C:\VMs\Windows11\VHD\Windows11.vhdx"

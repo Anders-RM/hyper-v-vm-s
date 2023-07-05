@@ -5,10 +5,10 @@ if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
 }
 
 # Define variables for the virtual machine
-$vmName = "Windows10"
+$vmName = "Windows 10"
 $vmMemory = 4096MB
 $vmProcessorCount = 2
-$vmDiskPath = "C:\VMs\Windows11\VHD\Windows11.vhdx"
+$vmDiskPath = "C:\VMs\Windows10\VHD\Windows10.vhdx"
 $isoPath = "C:\ISOs\Windows10.iso"
 $switchName = "ExternalSwitch"
 $vhdSize = 127GB
