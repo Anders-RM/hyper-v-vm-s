@@ -5,18 +5,16 @@ if (-not (Get-VMSwitch -Name "ExternalSwitch")) {
 }
 $hperVDefaultPath  = (Get-VMHost).VirtualMachinePath
 # Define variables for the virtual machine
-$vmName = "Windows 10"
+$vmName = "Windows 11"
 $vmMemory = 4096MB
 $vmProcessorCount = 2
-$vmDiskPath = "$hperVDefaultPath\$vmName\VHD\"
-$vmDisk = "$vmDiskPath\Windows10.vhdx"
+$vmDiskPath = "$hperVDefaultPath\$vmName\VHD\$vmName.vhdx"
+$isoPath = "C:\ISOs\Win11_Media_Creation_Tool.iso"
 $switchName = "ExternalSwitch"
+$vhdSize = 127GB
 
-if(-not(Test-Path $vmDiskPath)){
-    new-item $vmDiskPath -ItemType Directory -Force
-}
-
-Copy-Item .\Windows10.vhdx $vmDiskPath
+# Create an empty VHDX file for the virtual machine
+New-VHD -Path $vmDiskPath -SizeBytes $vhdSize -Dynamic
 
 # Create a new virtual machine with the specified settings
 New-VM -Name $vmName -Generation 2 -MemoryStartupBytes $vmMemory -SwitchName $switchName -Path "C:\VMs"
@@ -25,7 +23,10 @@ New-VM -Name $vmName -Generation 2 -MemoryStartupBytes $vmMemory -SwitchName $sw
 Set-VMProcessor -VMName $vmName -Count $vmProcessorCount
 
 # Add a virtual hard disk to the virtual machine
-Add-VMHardDiskDrive -VMName $vmName -Path $vmDisk
+Add-VMHardDiskDrive -VMName $vmName -Path $vmDiskPath
+
+# Attach the ISO file to the virtual machine
+Add-VMDvdDrive -VMName $vmName -Path $isoPath
 
 # Set a new local key protector for the virtual machine
 Set-VMKeyProtector -VMName $VMName -NewLocalKeyProtector
@@ -35,10 +36,7 @@ Enable-VMTPM -VMName $VMName
 
 Set-VM -Name $VMName -AutomaticCheckpointsEnabled $false
 
-Set-VMFirmware -VMName $VMName -FirstBootDevice (Get-VMHardDiskDrive -VMName $VMName)
+Set-VMFirmware -VMName $VMName -FirstBootDevice (Get-VMDvdDrive -VMName $VMName)
 
 # Start the virtual machine
 Start-VM -Name $vmName
-
-
-
