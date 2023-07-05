@@ -9,7 +9,7 @@ $vmName = "Windows 11"
 $vmMemory = 4096MB
 $vmProcessorCount = 2
 $vmDiskPath = "C:\VMs\Windows11\VHD\Windows11.vhdx"
-$isoPath = "C:\ISOs\Windows11.iso"
+$isoPath = "C:\ISOs\Win11_Media_Creation_Tool.iso"
 $switchName = "ExternalSwitch"
 $vhdSize = 127GB
 

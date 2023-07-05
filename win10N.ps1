@@ -9,7 +9,7 @@ $vmName = "Windows 10"
 $vmMemory = 4096MB
 $vmProcessorCount = 2
 $vmDiskPath = "C:\VMs\Windows10\VHD\Windows10.vhdx"
-$isoPath = "C:\ISOs\Windows10.iso"
+$isoPath = "C:\ISOs\Win10_Media_Creation_Tool.iso"
 $switchName = "ExternalSwitch"
 $vhdSize = 127GB
 
